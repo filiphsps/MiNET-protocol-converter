@@ -1,15 +1,19 @@
 {
   "name": "minet-protocol-converter",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Filiph Sandstrom",
+  "author": "",
   "license": "MIT",
+  "preferGlobal": true,
   "dependencies": {
     "download-file-sync": "^1.0.4",
     "xml2js": "^0.4.17"
+  },
+  "bin": {
+    "minet-protocol-converter": "bin/app.js"
   }
 }
