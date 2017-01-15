@@ -159,6 +159,7 @@ module.exports = (callback) => {
     /* Handle edge-cases (thanks protodef :P) */
     function convertType (type) {
         switch (type) {
+            //FIXME: This NEEDS to be support for things to properly work
             case 'signedvarlong':
             case 'unsignedvarlong':
             case 'varlong':
