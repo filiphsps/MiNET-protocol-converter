@@ -19,13 +19,13 @@ let template = {
         "vector3":[
             "container", [{
                     "name": "x",
-                    "type": "f32"
+                    "type": "lf32"
                 }, {
                     "name": "y",
-                    "type": "f32"
+                    "type": "lf32"
                 }, {
                     "name": "z",
-                    "type": "f32"
+                    "type": "lf32"
                 }]],
         "vector2":[
             "container", [{
@@ -41,13 +41,13 @@ let template = {
                 "type": [
                     "container", [{
                         "name": "x",
-                        "type": "f32"
+                        "type": "lf32"
                     }, {
                         "name": "y",
-                        "type": "f32"
+                        "type": "lf32"
                     }, {
                         "name": "z",
-                        "type": "f32"
+                        "type": "lf32"
                     }, {
                         "name": "yaw",
                         "type": "f32"
@@ -176,7 +176,7 @@ module.exports = (callback) => {
             case 'uint':
                 return 'u32';
             case 'float':
-                return 'f32';
+                return 'lf32';
             case 'long':
                 return 'i64';
             case 'ulong':
