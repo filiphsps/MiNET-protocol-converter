@@ -37,7 +37,7 @@ let template = {
             }]],
         "playerlocation": [
             "array", {
-                "countType":"i16",
+                "countType":"li16",
                 "type": [
                     "container", [{
                         "name": "x",
@@ -139,8 +139,10 @@ module.exports = (callback) => {
             
             Packet.fields = customPacket(Packet.name);
 
-            if (packet.field && Packet.fields.length <= 0)
+            if (packet.field && Packet.fields.length <= 0) 
                 packet.field.forEach((field) => {
+                    console.log(field.$.name.toLowerCase().split(' ').join('_') + ': ' + field.$.type.toLowerCase().split(' ').join('_') + '->' + convertType(field.$.type.toLowerCase().split(' ').join('_')));
+
                     Packet.fields.push({
                         name: field.$.name.toLowerCase().split(' ').join('_'),
                         type: convertType(field.$.type.toLowerCase().split(' ').join('_'))
@@ -167,12 +169,16 @@ module.exports = (callback) => {
             case 'unsignedvarint':
                 return 'varint';
             
+            case 'uuid':
+                return 'string';
+
             case 'byte':
                 return 'u8';
             case 'short':
                 return 'i16';
             case 'int':
                 return 'i32';
+            case 'length':
             case 'uint':
                 return 'u32';
             case 'float':
@@ -204,6 +210,7 @@ module.exports = (callback) => {
             case 'metadataints':
             case 'rules':
 
+            case 'resourcepackids':
             case 'resourcepackidversions':
             case 'resourcepackinfos':
                 return 'varint';
@@ -287,3 +294,7 @@ module.exports = (callback) => {
         }
     }
 };
+
+module.exports((err, res) => {
+    console.log(res);
+});
