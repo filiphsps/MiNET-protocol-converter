@@ -10,24 +10,24 @@ let template = {
         //Types
         "string": [
             "pstring", {
-                "countType":"i16"
+                "countType": "i16"
             }],
         "lstring": [
             "pstring", {
-                "countType":"li16"
+                "countType": "li16"
             }],
-        "vector3":[
+        "vector3": [
             "container", [{
-                    "name": "x",
-                    "type": "lf32"
-                }, {
-                    "name": "y",
-                    "type": "lf32"
-                }, {
-                    "name": "z",
-                    "type": "lf32"
-                }]],
-        "vector2":[
+                "name": "x",
+                "type": "lf32"
+            }, {
+                "name": "y",
+                "type": "lf32"
+            }, {
+                "name": "z",
+                "type": "lf32"
+            }]],
+        "vector2": [
             "container", [{
                 "name": "x",
                 "type": "f32"
@@ -37,7 +37,7 @@ let template = {
             }]],
         "playerlocation": [
             "array", {
-                "countType":"li16",
+                "countType": "li16",
                 "type": [
                     "container", [{
                         "name": "x",
@@ -57,10 +57,11 @@ let template = {
                     }, {
                         "name": "headYaw",
                         "type": "f32"
-                    }]]}],
+                    }]]
+            }],
 
         //Packets
-        "encapsulated_packet":[
+        "encapsulated_packet": [
             "container",
             [
                 {
@@ -77,11 +78,11 @@ let template = {
                 },
                 {
                     "name": "params",
-                    "type":[
+                    "type": [
                         "switch",
                         {
                             "compareTo": "name",
-                            "fields":{
+                            "fields": {
                                 "mcpe": "mcpe_packet"
                             }
                         }
@@ -136,10 +137,10 @@ module.exports = (callback) => {
 
             if (!Packet.name)
                 return;
-            
+
             Packet.fields = customPacket(Packet.name);
 
-            if (packet.field && Packet.fields.length <= 0) 
+            if (packet.field && Packet.fields.length <= 0)
                 packet.field.forEach((field) => {
                     console.log(field.$.name.toLowerCase().split(' ').join('_') + ': ' + field.$.type.toLowerCase().split(' ').join('_') + '->' + convertType(field.$.type.toLowerCase().split(' ').join('_')));
 
@@ -148,7 +149,7 @@ module.exports = (callback) => {
                         type: convertType(field.$.type.toLowerCase().split(' ').join('_'))
                     });
                 });
-            
+
             mappings[Packet.id] = Packet.name;
             fields_switch[Packet.name] = Packet.type;
             template.types[Packet.type] = ['container', Packet.fields];
@@ -159,7 +160,7 @@ module.exports = (callback) => {
     });
 
     /* Handle edge-cases (thanks protodef :P) */
-    function convertType (type) {
+    function convertType(type) {
         switch (type) {
             //FIXME: This NEEDS to be support for things to properly work
             case 'signedvarlong':
@@ -168,21 +169,21 @@ module.exports = (callback) => {
             case 'signedvarint':
             case 'unsignedvarint':
                 return 'varint';
-            
+
             case 'uuid':
                 return 'string';
 
             case 'byte':
                 return 'u8';
-                
+
             case 'short':
                 return 'i16';
             case 'ushort':
                 return 'u16';
-                
+
             case 'int':
                 return 'i32';
-                
+
             case 'length':
             case 'uint':
                 return 'u32';
@@ -196,15 +197,17 @@ module.exports = (callback) => {
             case 'bytearray':
             case 'byte[]':
                 return ["buffer", {
-                            "countType": "varint",
-                            "type": "i8"
-                        }]; //FIXME: is this right?
-            
+                    "countType": "varint",
+                    //"type": "i8"
+                }]; //FIXME: is this right?
+
             //FIXME: !!!
             case 'blockcoordinates':
+            case 'blockstates':
             case 'gamerules':
             case 'mapinfo':
             case 'nbt':
+            case 'links':
             case 'item':
             case 'itemstacks':
             case 'recipes':
@@ -215,7 +218,7 @@ module.exports = (callback) => {
             case 'metadatadictionary':
             case 'metadataints':
             case 'rules':
-            case 'transactions':
+            case 'transaction':
             case 'resourcepackids':
             case 'resourcepackidversions':
             case 'resourcepackinfos':
@@ -228,7 +231,7 @@ module.exports = (callback) => {
         }
     }
 
-    function convertName (name) {
+    function convertName(name) {
         if (name.substring(0, 3) == 'id_')
             return null;
 
@@ -250,41 +253,43 @@ module.exports = (callback) => {
         }
     }
 
-    function customPacket (name) {
+    function customPacket(name) {
         switch (name) {
             case 'game_login':
                 return [{
-                        "name": "protocol",
-                        "type": "i32"
-                    }, {
-                        "name": "edition",
-                        "type": "i8"
-                    }, {
-                        "name": "body",
-                        "type": [
-                            "buffer", {
-                                "countType": "varint"
-                            }]}];
-            
+                    "name": "protocol",
+                    "type": "i32"
+                }, {
+                    "name": "edition",
+                    "type": "i8"
+                }, {
+                    "name": "body",
+                    "type": [
+                        "buffer", {
+                            "countType": "varint"
+                        }]
+                }];
+
             case 'text':
                 return [{
-                            "name": "type",
-                            "type": "i8"
-                        }, {
-                        "name": "source",
-                        "type": [
-                            "switch", {
+                    "name": "type",
+                    "type": "i8"
+                }, {
+                    "name": "source",
+                    "type": [
+                        "switch", {
                             "compareTo": "type",
                             "fields": {
                                 "1": "string",
                                 "3": "string"
                             },
                             "default": "void"
-                            }
-                        ]}, {
-                        "name": "message",
-                        "type": [
-                            "switch", {
+                        }
+                    ]
+                }, {
+                    "name": "message",
+                    "type": [
+                        "switch", {
                             "compareTo": "type",
                             "fields": {
                                 "0": "string",
@@ -295,7 +300,8 @@ module.exports = (callback) => {
                                 "5": "string"
                             },
                             "default": "void"
-                            }]}];
+                        }]
+                }];
 
             default:
                 return [];
