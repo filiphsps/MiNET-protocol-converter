@@ -174,10 +174,15 @@ module.exports = (callback) => {
 
             case 'byte':
                 return 'u8';
+                
             case 'short':
                 return 'i16';
+            case 'ushort':
+                return 'u16';
+                
             case 'int':
                 return 'i32';
+                
             case 'length':
             case 'uint':
                 return 'u32';
@@ -197,6 +202,7 @@ module.exports = (callback) => {
             
             //FIXME: !!!
             case 'blockcoordinates':
+            case 'gamerules':
             case 'mapinfo':
             case 'nbt':
             case 'item':
@@ -209,10 +215,12 @@ module.exports = (callback) => {
             case 'metadatadictionary':
             case 'metadataints':
             case 'rules':
-
+            case 'transactions':
             case 'resourcepackids':
             case 'resourcepackidversions':
             case 'resourcepackinfos':
+            case 'scoreentries':
+            case 'scoreboardidentityentries':
                 return 'varint';
 
             default:
